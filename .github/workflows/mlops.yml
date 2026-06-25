@@ -31,7 +31,7 @@ jobs:
 
       - name: Run unit tests
         # TODO 1: Viet lenh de chay pytest tren thu muc tests/ voi co -v
-        run: pytest tests/-v
+        run: pytest tests/ -v
 
   # ---------------------------------------------------------------------------
   # JOB 2 - TRAIN
@@ -69,6 +69,8 @@ jobs:
         #         Set ket qua thanh output "accuracy" de job deploy co the doc.
         #
         # Goi y:
+        #   ACC=$(python -c "import json; d=json.load(open('outputs/metrics.json')); print(d['accuracy'])")
+        #   echo "accuracy=$ACC" >> $GITHUB_OUTPUT
         run: |
           ACC=$(python -c "import json; d=json.load(open('outputs/metrics.json')); print(d['accuracy'])")
           echo "accuracy=$ACC" >> $GITHUB_OUTPUT
@@ -145,6 +147,14 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
+            # TODO 7: Restart service mlops-serve tren VM.
+            # TODO 8: Cho server san sang roi goi curl /health de xac nhan.
+            #         Neu health check that bai sau nhieu lan thu, thoat voi exit 1.
+            #
+            # Goi y:
+            #   sudo systemctl restart mlops-serve
+            #   sleep 5
+            #   curl -sf http://localhost:8000/health && echo "Health check passed." || exit 1
             sudo systemctl restart mlops-serve
             sleep 5
-            curl -sf http://localhost:8000/health && echo "Health check passed." || exit
+            curl -sf http://localhost:8000/health && echo "Health check passed." || exit 1
