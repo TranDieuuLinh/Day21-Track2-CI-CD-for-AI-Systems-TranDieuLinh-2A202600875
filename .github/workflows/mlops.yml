@@ -31,7 +31,7 @@ jobs:
 
       - name: Run unit tests
         # TODO 1: Viet lenh de chay pytest tren thu muc tests/ voi co -v
-        run: pytest tests/v-
+        run: pytest tests/-v
 
   # ---------------------------------------------------------------------------
   # JOB 2 - TRAIN
