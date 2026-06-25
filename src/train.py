@@ -11,6 +11,12 @@ from sklearn.metrics import accuracy_score, f1_score
 EVAL_THRESHOLD = 0.70
 
 
+def _configure_mlflow_tracking() -> None:
+    """Use a complete local tracking store unless an external one is configured."""
+    if not os.environ.get("MLFLOW_TRACKING_URI"):
+        mlflow.set_tracking_uri("sqlite:///mlflow.db")
+
+
 def train(
     params: dict,
     data_path: str = "data/train_phase1.csv",
@@ -30,6 +36,7 @@ def train(
 
     df_train = pd.read_csv(data_path)
     df_eval = pd.read_csv(eval_path)
+    _configure_mlflow_tracking()
 
     # TODO 2: Tach dac trung (X) va nhan (y)
     X_train = df_train.drop(columns=["target"])
